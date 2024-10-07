@@ -1,11 +1,3 @@
-"""
-The classic game of flappy bird. Make with python
-and pygame. Features pixel perfect collision using masks :o
-
-Date Modified:  Jul 30, 2019
-Author: Tech With Tim
-Estimated Work Time: 5 hours (1 just for that damn collision)
-"""
 import pygame
 import random
 import os
@@ -13,7 +5,7 @@ import time
 import neat
 import visualize
 import pickle
-pygame.font.init()  # init font
+pygame.font.init()
 
 WIN_WIDTH = 600
 WIN_HEIGHT = 800
@@ -134,8 +126,8 @@ class Pipe():
     """
     represents a pipe object
     """
-    GAP = 200
-    VEL = 5
+    GAP = 180
+    VEL = 7
 
     def __init__(self, x):
         """
@@ -337,7 +329,7 @@ def eval_genomes(genomes, config):
 
     run = True
     while run and len(birds) > 0:
-        clock.tick(30)
+        clock.tick(85)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -404,6 +396,8 @@ def eval_genomes(genomes, config):
         '''if score > 20:
             pickle.dump(nets[0],open("best.pickle", "wb"))
             break'''
+        if score > 40:
+            run = False
 
 
 def run(config_file):
@@ -439,3 +433,5 @@ if __name__ == '__main__':
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
     run(config_path)
+    
+    pygame.quit()

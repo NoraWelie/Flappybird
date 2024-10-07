@@ -123,9 +123,7 @@ class Bird:
 
 
 class Pipe():
-    """
-    represents a pipe object
-    """
+    # Deze waarden geven aan wat het gat tussen de bovenkant en onderkant van de pijp is, en ook hoe snel de verschillende pijpen achter elkaar komen.
     GAP = 180
     VEL = 7
 
@@ -329,7 +327,7 @@ def eval_genomes(genomes, config):
 
     run = True
     while run and len(birds) > 0:
-        clock.tick(85)
+        clock.tick(85) #Dit geeft de snelheid van de vogel aan.
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -397,7 +395,7 @@ def eval_genomes(genomes, config):
             pickle.dump(nets[0],open("best.pickle", "wb"))
             break'''
         if score > 40:
-            run = False
+            run = False #Als de score hoger is dan 40, dan eindigd het spel.
 
 
 def run(config_file):
@@ -434,4 +432,4 @@ if __name__ == '__main__':
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
     run(config_path)
     
-    pygame.quit()
+    pygame.quit() #Dit zorgt er voor dat het spel zichzelf goed afsluit. 

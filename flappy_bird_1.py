@@ -335,7 +335,7 @@ def eval_genomes(genomes, config):
             break
          
 
-def run(config_file):
+def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configuratie map kunnen gebruiken voor het inladen van een populatie, etc.
    
     
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
@@ -358,7 +358,7 @@ def run(config_file):
     print('\nBest genome:\n{!s}'.format(winner))
 
 
-if __name__ == '__main__': #Deze regels tekst zorgen er voor dat het programma de configuratie map kan vinden, en de map ook kan inladen.
+if __name__ == '__main__': #1. Deze regels tekst zorgen er voor dat het programma de configuratie map kan vinden, en de map ook kan inladen.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
     run(config_path)

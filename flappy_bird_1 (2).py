@@ -241,7 +241,7 @@ def eval_genomes(genomes, config):
     nets = []
     birds = []
     ge = []
-    
+    #9. Deze houden bij welk neuraal netwerk met welke vogel bezig is, en ook alle genomen, om de fitness te kunnen veranderen.
     best_net = load_best_network()
     
     for genome_id, genome in genomes:

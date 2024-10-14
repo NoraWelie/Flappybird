@@ -285,6 +285,7 @@ def eval_genomes(genomes, config):
 
     
             output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
+            #14. Dit geeft het neuraal netwerk de informatie die het nodig heeft om te kijken of de vogel moet 'springen' of niet. 
 
             if output[0] > 0.5: 
                 bird.jump()

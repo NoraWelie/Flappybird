@@ -344,7 +344,7 @@ def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configur
           #4. Deze regels geven wat statistieken weer van hoeveel generaties er zijn (optioneel, maar wel handig om te hebben zodat je weet dat er iets gebeurt).
 
 
-    winner = p.run(eval_genomes, 5)
+    winner = p.run(eval_genomes, 10)
        #5. Dit zorgt ervoor dat de fitness functie, die nodig is voor de NEAT, 50 generaties kan lopen.
 
 

@@ -281,6 +281,7 @@ def eval_genomes(genomes, config):
         for x, bird in enumerate(birds):
             ge[x].fitness += 0.1
             bird.move()
+        #13. Dit geeft de vogel een fitness van 0.1 voor elke frame dat het nog levend is. 
 
     
             output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))

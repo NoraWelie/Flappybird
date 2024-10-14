@@ -307,6 +307,8 @@ def eval_genomes(genomes, config):
             if not pipe.passed and pipe.x < bird.x:
                 pipe.passed = True
                 add_pipe = True
+                #7. Kijken of de vogel langs de pijp is gekomen, zo ja, dan laadt het spel een nieuwe pijp in.
+                
 
         if add_pipe:
             score += 1

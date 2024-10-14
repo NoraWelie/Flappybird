@@ -325,9 +325,8 @@ def eval_genomes(genomes, config):
 
         draw_window(WIN, birds, pipes, base, score, gen, pipe_ind)
 
-        if score > 20:
-            pickle.dump(nets[0],open("best.pickle", "wb"))
-            break
+        if score > 25:
+            run = False
          
 
 def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configuratie map kunnen gebruiken voor het inladen van een populatie, etc.
@@ -345,12 +344,25 @@ def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configur
           #4. Deze regels geven wat statistieken weer van hoeveel generaties er zijn (optioneel, maar wel handig om te hebben zodat je weet dat er iets gebeurt).
 
 
-    winner = p.run(eval_genomes, 50)
+    winner = p.run(eval_genomes, 5)
        #5. Dit zorgt ervoor dat de fitness functie, die nodig is voor de NEAT, 50 generaties kan lopen.
 
 
     print('\nBest genome:\n{!s}'.format(winner))
+    
+    with open("winner.pkl", "wb") as f:
+        pickle.dump(winner, f)
+        
+    global gen
+    play_with_best_bird("winner.pkl", config)
 
+def play_with_best_bird(genome_path, config_settings):
+    if os.path.exists(genome_path):
+        with open(genome_path, "rb") as f:
+            genome = pickle.load(f)
+        genomes = [(1, genome)]
+        eval_genomes(genomes, config_settings)
+      
 
 if __name__ == '__main__': #1. Deze regels tekst zorgen er voor dat het programma de configuratie map kan vinden, en de map ook kan inladen.
     local_dir = os.path.dirname(__file__)

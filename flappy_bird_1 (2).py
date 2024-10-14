@@ -275,10 +275,10 @@ def eval_genomes(genomes, config):
         pipe_ind = 0
         if len(birds) > 0:
             if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_TOP.get_width():
+                #12. Als er meerdere pijpen op het scherm zijn moet het programma weten welke pijp die moet gebruiken voor de input van het neuraal netwerk, deze code zorgt daar voor. 
                 pipe_ind = 1
-        #12. Als er meerdere pijpen op het scherm zijn moet het programma weten welke pijp die moet gebruiken voor de input van het neuraal netwerk, deze code zorgt daar voor. 
-
-        for x, bird in enumerate(birds):
+                
+                for x, bird in enumerate(birds):
             ge[x].fitness += 0.1
             bird.move()
         #13. Dit geeft de vogel een fitness van 0.1 voor elke frame dat het nog levend is. 
@@ -316,7 +316,8 @@ def eval_genomes(genomes, config):
 
         if add_pipe:
             score += 1
-           
+           #Dit zorgt ervoor dat de score met 1 omhoog gaat als de vogel door een pijp heen gaat.
+            
             for genome in ge:
                 genome.fitness += 5
                 #11. Zorgt ervoor dat de vogels door de pijpen willen door extra fitness te geven als ze tussen de pijpen door zijn gegaan. 
@@ -367,3 +368,4 @@ if __name__ == '__main__': #1. Deze regels tekst zorgen er voor dat het programm
     run(config_path) 
 
     pygame.quit()
+    #Dit zorgt ervoor dat het spel zichzelf goed afsluit. 

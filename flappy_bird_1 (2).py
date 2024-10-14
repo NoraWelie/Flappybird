@@ -316,6 +316,7 @@ def eval_genomes(genomes, config):
            
             for genome in ge:
                 genome.fitness += 5
+                #11. Zorgt ervoor dat de vogels door de pijpen willen door extra fitness te geven als ze tussen de pijpen door zijn gegaan. 
             pipes.append(Pipe(WIN_WIDTH))
 
         for r in rem:

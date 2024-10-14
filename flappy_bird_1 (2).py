@@ -249,7 +249,8 @@ def eval_genomes(genomes, config):
         if best_net:
             net = best_net
         else:
-            net = neat.nn.FeedForwardNetwork.create(genome, config) 
+            net = neat.nn.FeedForwardNetwork.create(genome, config)
+            #10. Neuraal netwerk opzetten door het de genoom te geven, en de configuratie map. 
         nets.append(net)
         birds.append(Bird(230,350))
         ge.append(genome)

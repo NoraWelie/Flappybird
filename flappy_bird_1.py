@@ -342,8 +342,7 @@ def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configur
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
 
-    # Create the population, which is the top-level object for a NEAT run.
-    p = neat.Population(config)
+    p = neat.Population(config) #3. Dit zorgt er voor dat de populatie gemaakt wordt
 
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))

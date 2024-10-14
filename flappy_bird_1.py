@@ -24,22 +24,20 @@ base_img = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs","base.
 
 gen = 0
 
+def load_best_network():
+    if os.path.exists("best.pickle"):
+        return pickle.load(open("best.pickle", "rb"))
+    return None
+
 class Bird:
-    """
-    Bird class representing the flappy bird
-    """
+  
     MAX_ROTATION = 25
     IMGS = bird_images
     ROT_VEL = 20
     ANIMATION_TIME = 5
 
     def __init__(self, x, y):
-        """
-        Initialize the object
-        :param x: starting x pos (int)
-        :param y: starting y pos (int)
-        :return: None
-        """
+      
         self.x = x
         self.y = y
         self.tilt = 0  # degrees to tilt
@@ -50,19 +48,13 @@ class Bird:
         self.img = self.IMGS[0]
 
     def jump(self):
-        """
-        make the bird jump
-        :return: None
-        """
-        self.vel = -10.5
+        
+        self.vel = -11
         self.tick_count = 0
         self.height = self.y
 
     def move(self):
-        """
-        make the bird move
-        :return: None
-        """
+       
         self.tick_count += 1
 
         # for downward acceleration
@@ -85,11 +77,7 @@ class Bird:
                 self.tilt -= self.ROT_VEL
 
     def draw(self, win):
-        """
-        draw the bird
-        :param win: pygame window or surface
-        :return: None
-        """
+        
         self.img_count += 1
 
         # For animation of bird, loop through three images
@@ -115,25 +103,17 @@ class Bird:
         blitRotateCenter(win, self.img, (self.x, self.y), self.tilt)
 
     def get_mask(self):
-        """
-        gets the mask for the current image of the bird
-        :return: None
-        """
+        
         return pygame.mask.from_surface(self.img)
 
 
 class Pipe():
     # Deze waarden geven aan wat het gat tussen de bovenkant en onderkant van de pijp is, en ook hoe snel de verschillende pijpen achter elkaar komen.
-    GAP = 180
+    GAP = 190
     VEL = 7
 
     def __init__(self, x):
-        """
-        initialize pipe object
-        :param x: int
-        :param y: int
-        :return" None
-        """
+       
         self.x = x
         self.height = 0
 
@@ -149,27 +129,17 @@ class Pipe():
         self.set_height()
 
     def set_height(self):
-        """
-        set the height of the pipe, from the top of the screen
-        :return: None
-        """
+       
         self.height = random.randrange(50, 450)
         self.top = self.height - self.PIPE_TOP.get_height()
         self.bottom = self.height + self.GAP
 
     def move(self):
-        """
-        move pipe based on vel
-        :return: None
-        """
+        
         self.x -= self.VEL
 
     def draw(self, win):
-        """
-        draw both the top and bottom of the pipe
-        :param win: pygame window/surface
-        :return: None
-        """
+       
         # draw top
         win.blit(self.PIPE_TOP, (self.x, self.top))
         # draw bottom
@@ -177,11 +147,7 @@ class Pipe():
 
 
     def collide(self, bird, win):
-        """
-        returns if a point is colliding with the pipe
-        :param bird: Bird object
-        :return: Bool
-        """
+        
         bird_mask = bird.get_mask()
         top_mask = pygame.mask.from_surface(self.PIPE_TOP)
         bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
@@ -197,28 +163,19 @@ class Pipe():
         return False
 
 class Base:
-    """
-    Represnts the moving floor of the game
-    """
+    
     VEL = 5
     WIDTH = base_img.get_width()
     IMG = base_img
 
     def __init__(self, y):
-        """
-        Initialize the object
-        :param y: int
-        :return: None
-        """
+      
         self.y = y
         self.x1 = 0
         self.x2 = self.WIDTH
 
     def move(self):
-        """
-        move floor so it looks like its scrolling
-        :return: None
-        """
+        
         self.x1 -= self.VEL
         self.x2 -= self.VEL
         if self.x1 + self.WIDTH < 0:
@@ -228,40 +185,20 @@ class Base:
             self.x2 = self.x1 + self.WIDTH
 
     def draw(self, win):
-        """
-        Draw the floor. This is two images that move together.
-        :param win: the pygame surface/window
-        :return: None
-        """
+      
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
 
 
 def blitRotateCenter(surf, image, topleft, angle):
-    """
-    Rotate a surface and blit it to the window
-    :param surf: the surface to blit to
-    :param image: the image surface to rotate
-    :param topLeft: the top left position of the image
-    :param angle: a float value for angle
-    :return: None
-    """
+    
     rotated_image = pygame.transform.rotate(image, angle)
     new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
 
     surf.blit(rotated_image, new_rect.topleft)
 
 def draw_window(win, birds, pipes, base, score, gen, pipe_ind):
-    """
-    draws the windows for the main game loop
-    :param win: pygame window surface
-    :param bird: a Bird object
-    :param pipes: List of pipes
-    :param score: score of the game (int)
-    :param gen: current generation
-    :param pipe_ind: index of closest pipe
-    :return: None
-    """
+  
     if gen == 0:
         gen = 1
     win.blit(bg_img, (0,0))
@@ -297,11 +234,7 @@ def draw_window(win, birds, pipes, base, score, gen, pipe_ind):
 
 
 def eval_genomes(genomes, config):
-    """
-    runs the simulation of the current population of
-    birds and sets their fitness based on the distance they
-    reach in the game.
-    """
+    
     global WIN, gen
     win = WIN
     gen += 1
@@ -312,9 +245,15 @@ def eval_genomes(genomes, config):
     nets = []
     birds = []
     ge = []
+    
+    best_net = load_best_network()
+    
     for genome_id, genome in genomes:
-        genome.fitness = 0  # start with fitness level of 0
-        net = neat.nn.FeedForwardNetwork.create(genome, config)
+        genome.fitness = 0
+        if best_net:
+            net = best_net
+        else:
+            net = neat.nn.FeedForwardNetwork.create(genome, config) 
         nets.append(net)
         birds.append(Bird(230,350))
         ge.append(genome)
@@ -391,19 +330,14 @@ def eval_genomes(genomes, config):
         draw_window(WIN, birds, pipes, base, score, gen, pipe_ind)
 
         # break if score gets large enough
-        '''if score > 20:
+        if score > 20:
             pickle.dump(nets[0],open("best.pickle", "wb"))
-            break'''
-        if score > 40:
-            run = False #Als de score hoger is dan 40, dan eindigd het spel.
-
+            break
+         
 
 def run(config_file):
-    """
-    runs the NEAT algorithm to train a neural network to play flappy bird.
-    :param config_file: location of config file
-    :return: None
-    """
+   
+    
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
@@ -424,12 +358,9 @@ def run(config_file):
     print('\nBest genome:\n{!s}'.format(winner))
 
 
-if __name__ == '__main__':
-    # Determine path to configuration file. This path manipulation is
-    # here so that the script will run successfully regardless of the
-    # current working directory.
+if __name__ == '__main__': #Deze regels tekst zorgen er voor dat het programma de configuratie map kan vinden, en de map ook kan inladen.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
     run(config_path)
-    
-    pygame.quit() #Dit zorgt er voor dat het spel zichzelf goed afsluit. 
+
+    pygame.quit()

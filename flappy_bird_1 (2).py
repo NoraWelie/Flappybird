@@ -322,6 +322,7 @@ def eval_genomes(genomes, config):
 
         for bird in birds:
             if bird.y + bird.img.get_height() - 10 >= FLOOR or bird.y < -50:
+                #8. Dit registreert of de vogel de grond raakt, of de bovenkant, en zo ja, dan wordt de vogel verwijderd.
                 nets.pop(birds.index(bird))
                 ge.pop(birds.index(bird))
                 birds.pop(birds.index(bird))

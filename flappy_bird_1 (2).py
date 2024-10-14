@@ -275,7 +275,8 @@ def eval_genomes(genomes, config):
         pipe_ind = 0
         if len(birds) > 0:
             if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_TOP.get_width():
-                pipe_ind = 1                                                                
+                pipe_ind = 1
+        #12. Als er meerdere pijpen op het scherm zijn moet het programma weten welke pijp die moet gebruiken voor de input van het neuraal netwerk, deze code zorgt daar voor. 
 
         for x, bird in enumerate(birds):
             ge[x].fitness += 0.1

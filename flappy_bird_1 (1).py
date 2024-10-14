@@ -348,12 +348,12 @@ def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configur
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    #4 Deze regels geven wat statistieken weer van hoeveel generaties er zijn (optioneel, maar wel handig om te hebben zodat je weet dat er iets gebeurt).
+    #4. Deze regels geven wat statistieken weer van hoeveel generaties er zijn (optioneel, maar wel handig om te hebben zodat je weet dat er iets gebeurt).
     #p.add_reporter(neat.Checkpointer(5))
 
-    # Run for up to 50 generations.
+   
     winner = p.run(eval_genomes, 50)
-
+    #5. Dit zorgt ervoor dat de fitness functie, die nodig is voor de NEAT, 50 generaties kan lopen.
     # show final stats
     print('\nBest genome:\n{!s}'.format(winner))
 

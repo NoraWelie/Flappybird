@@ -40,7 +40,7 @@ class Bird:
       
         self.x = x
         self.y = y
-        self.tilt = 0  # degrees to tilt
+        self.tilt = 0  #Hoeveel graden er wordt gedraaid
         self.tick_count = 0
         self.vel = 0
         self.height = self.y
@@ -57,10 +57,9 @@ class Bird:
        
         self.tick_count += 1
 
-        # for downward acceleration
-        displacement = self.vel*(self.tick_count) + 0.5*(3)*(self.tick_count)**2  # calculate displacement
+        #Voor de versnelling naar beneden
+        displacement = self.vel*(self.tick_count) + 0.5*(3)*(self.tick_count)**2 
 
-        # terminal velocity
         if displacement >= 16:
             displacement = (displacement/abs(displacement)) * 16
 
@@ -69,10 +68,10 @@ class Bird:
 
         self.y = self.y + displacement
 
-        if displacement < 0 or self.y < self.height + 50:  # tilt up
+        if displacement < 0 or self.y < self.height + 50:  #Omhoog draaien
             if self.tilt < self.MAX_ROTATION:
                 self.tilt = self.MAX_ROTATION
-        else:  # tilt down
+        else:  #Omlaag draaien
             if self.tilt > -90:
                 self.tilt -= self.ROT_VEL
 
@@ -80,7 +79,7 @@ class Bird:
         
         self.img_count += 1
 
-        # For animation of bird, loop through three images
+        #Dit is voor de plaatjes van de vogels
         if self.img_count <= self.ANIMATION_TIME:
             self.img = self.IMGS[0]
         elif self.img_count <= self.ANIMATION_TIME*2:
@@ -93,13 +92,13 @@ class Bird:
             self.img = self.IMGS[0]
             self.img_count = 0
 
-        # so when bird is nose diving it isn't flapping
+        #Dit maakt het dat de vogel niet gaat flapperen als die naar beneden aan het duiken is.
         if self.tilt <= -80:
             self.img = self.IMGS[1]
             self.img_count = self.ANIMATION_TIME*2
 
 
-        # tilt the bird
+
         blitRotateCenter(win, self.img, (self.x, self.y), self.tilt)
 
     def get_mask(self):
@@ -117,7 +116,7 @@ class Pipe():
         self.x = x
         self.height = 0
 
-        # where the top and bottom of the pipe is
+        #Dit zijn de waarden waar de bovenkant en de onderkant van de pijpen zijn.
         self.top = 0
         self.bottom = 0
 
@@ -140,9 +139,9 @@ class Pipe():
 
     def draw(self, win):
        
-        # draw top
+
         win.blit(self.PIPE_TOP, (self.x, self.top))
-        # draw bottom
+
         win.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
 
@@ -208,25 +207,25 @@ def draw_window(win, birds, pipes, base, score, gen, pipe_ind):
 
     base.draw(win)
     for bird in birds:
-        # draw lines from bird to pipe
+        #Dit maakt onzichtbare lijnen van de vogel naar de pijpen.
         if DRAW_LINES:
             try:
                 pygame.draw.line(win, (255,0,0), (bird.x+bird.img.get_width()/2, bird.y + bird.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].PIPE_TOP.get_width()/2, pipes[pipe_ind].height), 5)
                 pygame.draw.line(win, (255,0,0), (bird.x+bird.img.get_width()/2, bird.y + bird.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].PIPE_BOTTOM.get_width()/2, pipes[pipe_ind].bottom), 5)
             except:
                 pass
-        # draw bird
+
         bird.draw(win)
 
-    # score
+    #De score in beeld brengen
     score_label = STAT_FONT.render("Score: " + str(score),1,(255,255,255))
     win.blit(score_label, (WIN_WIDTH - score_label.get_width() - 15, 10))
 
-    # generations
+    #De generaties in beeld brengen
     score_label = STAT_FONT.render("Gens: " + str(gen-1),1,(255,255,255))
     win.blit(score_label, (10, 10))
 
-    # alive
+    #Hoeveel vogels leven in beeld brengen
     score_label = STAT_FONT.render("Alive: " + str(len(birds)),1,(255,255,255))
     win.blit(score_label, (10, 50))
 
@@ -239,9 +238,6 @@ def eval_genomes(genomes, config):
     win = WIN
     gen += 1
 
-    # start by creating lists holding the genome itself, the
-    # neural network associated with the genome and the
-    # bird object that uses that network to play
     nets = []
     birds = []
     ge = []
@@ -277,17 +273,17 @@ def eval_genomes(genomes, config):
 
         pipe_ind = 0
         if len(birds) > 0:
-            if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_TOP.get_width():  # determine whether to use the first or second
-                pipe_ind = 1                                                                 # pipe on the screen for neural network input
+            if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_TOP.get_width():
+                pipe_ind = 1                                                                
 
-        for x, bird in enumerate(birds):  # give each bird a fitness of 0.1 for each frame it stays alive
+        for x, bird in enumerate(birds):
             ge[x].fitness += 0.1
             bird.move()
 
-            # send bird location, top pipe location and bottom pipe location and determine from network whether to jump or not
+    
             output = nets[birds.index(bird)].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
 
-            if output[0] > 0.5:  # we use a tanh activation function so result will be between -1 and 1. if over 0.5 jump
+            if output[0] > 0.5: 
                 bird.jump()
 
         base.move()
@@ -296,7 +292,7 @@ def eval_genomes(genomes, config):
         add_pipe = False
         for pipe in pipes:
             pipe.move()
-            # check for collision
+    
             for bird in birds:
                 if pipe.collide(bird, win):
                     ge[birds.index(bird)].fitness -= 1
@@ -313,7 +309,7 @@ def eval_genomes(genomes, config):
 
         if add_pipe:
             score += 1
-            # can add this line to give more reward for passing through a pipe (not required)
+           
             for genome in ge:
                 genome.fitness += 5
             pipes.append(Pipe(WIN_WIDTH))
@@ -329,7 +325,6 @@ def eval_genomes(genomes, config):
 
         draw_window(WIN, birds, pipes, base, score, gen, pipe_ind)
 
-        # break if score gets large enough
         if score > 20:
             pickle.dump(nets[0],open("best.pickle", "wb"))
             break
@@ -344,22 +339,22 @@ def run(config_file): #2. Deze regels zorgen er voor dat we ook echt de configur
 
     p = neat.Population(config) #3. Dit zorgt er voor dat de populatie gemaakt wordt
 
-    # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    #p.add_reporter(neat.Checkpointer(5))
+          #4. Deze regels geven wat statistieken weer van hoeveel generaties er zijn (optioneel, maar wel handig om te hebben zodat je weet dat er iets gebeurt).
 
-    # Run for up to 50 generations.
+
     winner = p.run(eval_genomes, 50)
+       #5. Dit zorgt ervoor dat de fitness functie, die nodig is voor de NEAT, 50 generaties kan lopen.
 
-    # show final stats
+
     print('\nBest genome:\n{!s}'.format(winner))
 
 
 if __name__ == '__main__': #1. Deze regels tekst zorgen er voor dat het programma de configuratie map kan vinden, en de map ook kan inladen.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
-    run(config_path)
+    run(config_path) 
 
     pygame.quit()
